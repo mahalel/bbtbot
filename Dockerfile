@@ -17,10 +17,11 @@ COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
 
 # Start a new stage from scratch
-FROM alpine:latest
+# FROM alpine:latest
+FROM gcr.io/distroless/static-debian12
 
 # Install ca-certificates for SSL connections
-RUN apk --no-cache add ca-certificates
+# RUN apk --no-cache add ca-certificates
 
 WORKDIR /root/
 
