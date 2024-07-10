@@ -4,7 +4,6 @@ import (
 	"crypto/ed25519"
 	"encoding/hex"
 	"encoding/json"
-	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -58,9 +57,8 @@ func interactionHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	case 2:
-		username := decodedBody["member"].(map[string]interface{})["user"].(map[string]interface{})["username"].(string)
 		question := decodedBody["data"].(map[string]interface{})["options"].([]interface{})[0].(map[string]interface{})["value"].(string)
-		responseContent := fmt.Sprintf("Question from %s: %s", username, question)
+		responseContent, err := sendMessageToAnthropic(question)
 
 		response := map[string]interface{}{
 			"type": 4,
@@ -71,8 +69,6 @@ func interactionHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		//go checkOpenAI(decodedBody, signature, timestamp, question)
-		fmt.Printf("Checking Claude")
 	default:
 		http.Error(w, "Unknown interaction type", http.StatusBadRequest)
 	}
